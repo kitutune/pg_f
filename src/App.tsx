@@ -1,4 +1,3 @@
-// src/App.tsx
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import axios from 'axios';
 
@@ -33,6 +32,24 @@ const App: React.FC = () => {
       });
   };
 
+  const updateTodo = (id: number) => {
+    const updatedTodo = todos.find(todo => todo.id === id);
+    if (updatedTodo) {
+      updatedTodo.completed = !updatedTodo.completed;
+      axios.put<Todo>(`http://localhost:8000/todos/${id}`, updatedTodo)
+        .then((response) => {
+          setTodos(todos.map(todo => (todo.id === id ? response.data : todo)));
+        });
+    }
+  };
+
+  const deleteTodo = (id: number) => {
+    axios.delete(`http://localhost:8000/todos/${id}`)
+      .then(() => {
+        setTodos(todos.filter(todo => todo.id !== id));
+      });
+  };
+
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   };
@@ -49,7 +66,13 @@ const App: React.FC = () => {
       <ul>
         {todos.map((todo) => (
           <li key={todo.id}>
-            {todo.title} - {todo.completed ? 'Completed' : 'Incomplete'}
+            <span 
+              style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}
+              onClick={() => updateTodo(todo.id)}
+            >
+              {todo.title}
+            </span>
+            <button onClick={() => deleteTodo(todo.id)}>Delete</button>
           </li>
         ))}
       </ul>
