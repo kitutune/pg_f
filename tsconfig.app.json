@@ -1,28 +1,117 @@
 {
   "compilerOptions": {
+    // プロジェクトの一部として構築できるようにするオプション
     "composite": true,
+
+    // TypeScriptのビルド情報を保存するファイルのパスを指定
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+
+    /* 
+      コンパイル対象のJavaScriptのバージョンを指定します。
+      ES2020を指定しており、ES2020以降の構文がサポートされるJavaScriptにトランスパイルされます。
+      ※：typescriptで書いたコードがes2020形式のjsにトランスパイルされる
+      仮にここでesnextを指定していると最新のjsにトランスパイルされる結果ブラウザが未対応の可能性が出てしまう
+
+    */
     "target": "ES2020",
+
+    /* 
+      クラスフィールドを定義する際、'define'を使用するかどうかを指定します。
+      trueにすると、JavaScriptでクラスフィールドを定義する際により標準的な動作になります。
+    */
     "useDefineForClassFields": true,
+
+    /* 
+      プロジェクトで利用するライブラリを指定します。
+      ES2020の構文、ブラウザのDOM、そしてDOM.Iterableが含まれます。
+    */
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
+
+    /* 
+      使用するモジュールシステムを指定します。
+      'ESNext'を指定することで、最新のESモジュールが使用されます。
+    */
     "module": "ESNext",
+
+    /* 
+      外部型定義ファイルのチェックをスキップします。
+      これにより、コンパイル時間が短縮されます。
+    */
     "skipLibCheck": true,
 
     /* Bundler mode */
+    /* 
+      モジュール解決の方法を指定します。
+      'bundler'を指定することで、WebpackやViteなどのバンドラー向けのモジュール解決が行われます。
+    */
     "moduleResolution": "bundler",
+
+    /* 
+      TypeScriptファイルをインポートするときに拡張子を省略できるようにします。
+    */
     "allowImportingTsExtensions": true,
+
+    /* 
+      JSONファイルのインポートをサポートします。
+    */
     "resolveJsonModule": true,
+
+    /* 
+      各ファイルが独立してトランスパイルされるようにします。
+      これにより、Babelなどの他のトランスパイラと組み合わせて使用する際に便利です。
+    */
     "isolatedModules": true,
+
+    /* 
+      モジュールの検出方法を指定します。
+      'force'を指定すると、すべてのファイルがモジュールとして扱われます。
+    */
     "moduleDetection": "force",
+
+    /* 
+      noEmit オプションが true に設定されているため、TypeScriptコンパイラは実際にファイルを出力しません。
+      このため、通常のビルドプロセスではなく、Jestの実行時にBabelなどの別のトランスパイラが動作し、
+      オンザフライでトランスパイルが行われることが多いです。
+    */
     "noEmit": true,
+
+    /* 
+      JSX構文のトランスパイル方法を指定します。
+      'react-jsx'を指定すると、React 17+の自動インポート機能が利用されます。
+    */
     "jsx": "react-jsx",
 
     /* Linting */
+    /* 
+      厳格な型チェックを有効にします。
+      これにより、潜在的なバグを減らすことができます。
+    */
     "strict": true,
+
+    /* 
+      使用されていないローカル変数の警告を有効にします。
+    */
     "noUnusedLocals": true,
+
+    /* 
+      使用されていない関数のパラメータの警告を有効にします。
+    */
     "noUnusedParameters": true,
+
+    /* 
+      switch文でフォールスルーケースを防ぐための警告を有効にします。
+    */
     "noFallthroughCasesInSwitch": true,
-    "typeRoots": ["./node_modules/@types", "./src/types"]
+
+    /* 
+      プロジェクトで使用する型定義パッケージを指定します。
+      ここでは、Jestと@testing-library/jest-domの型定義を追加しています。
+    */
+    "types": ["jest", "@testing-library/jest-dom"]
   },
+  /* 
+    コンパイル対象のファイルやディレクトリを指定します。
+    ここでは、srcディレクトリ配下のファイルを対象としています。
+  */
   "include": ["src"]
 }

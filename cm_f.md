@@ -110,3 +110,51 @@
  1052  npm info globals
  1053  npm info @eslint/js  
  1054  npm run dev
+ 1054  npm run dev
+ 1055  history >> cm_f.md
+ 1056  brew list
+ 1057  which npm
+ 1058  npm install -g npm-check-updates\n
+ 1059  ncu
+ 1060  ncu -u
+ 1061  history >> cm_f.md
+ 1062  npm i
+ 1063  tree -L1
+ 1064  tree -L2
+ 1065  tree --help
+ 1066  tree -L2 -l node_modules
+ 1067  tree -L 2 --prune -I 'node_modules|dist|*.log'\n
+ 1068  tree -L2 -I "node_modules"
+ 1069  npm install --save-dev @testing-library/react
+ 1062  npm i
+ 1063  tree -L1
+ 1064  tree -L2
+ 1065  tree --help
+ 1066  tree -L2 -l node_modules
+ 1067  tree -L 2 --prune -I 'node_modules|dist|*.log'\n
+ 1068  tree -L2 -I "node_modules"
+ 1069  npm install --save-dev @testing-library/react
+ 1070  history >> cm_f.md
+ 1071  npm info v
+ 1072  npm info @types/react
+ 1073  npm ls @types/react
+ 1074  npm install --save-dev @types/jest\n
+ 1075  npm install --save-dev @playwright/test
+ 1076  history
+ 1077  npm install --save-dev @testing-library/jest-dom\n
+ 1099  node --version
+ 1100  npx ts-jest config:init\n
+ 1101  npm ls jest;npm info jest
+ 1102  npm install --save-dev jest\n
+ 1103  npm i
+ 1104  tree -L2 -I "node?modules"
+ 1105  tree -L2 -I "node?modules" >> temp
+ 1106  npm list @types|grep @testing-library/jest-dom
+ 1107  npm list @types
+ 1108  ls -R node_modules/@types/testing-library__jest-dom\n
+ 1109  npm ls @testing-library/jest-dom
+ 1110  npm install --save-dev ts-node
+ 1111  npm install --save-dev jest typescript ts-jest @types/jest
+ 1112  npm ls jest-environment-jsdom
+ 1113  npm install --save-dev jest-environment-jsdom
+ 1114  history

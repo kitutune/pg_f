@@ -1,83 +1,91 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect, useReducer } from 'react';
 
+// 型定義: TODOアイテムの型
 interface Todo {
-  id: number;
-  title: string;
-  completed: boolean;
+  id: number; // ユニークなID
+  task: string; // タスクの内容
+  completed: boolean; // タスクが完了したかどうか
 }
 
+// 型定義: Reducerのアクションの型
+type Action =
+  | { type: 'ADD_TODO'; payload: string } // タスク追加のアクション
+  | { type: 'TOGGLE_TODO'; payload: number } // タスク完了状態を切り替えるアクション
+  | { type: 'DELETE_TODO'; payload: number }; // タスク削除のアクション
+
+// Reducer関数: 状態とアクションに基づいて新しい状態を返す
+const todoReducer = (state: Todo[], action: Action): Todo[] => {
+  switch (action.type) {
+    case 'ADD_TODO':
+      return [
+        ...state,
+        { id: Date.now(), task: action.payload, completed: false },
+      ];
+    case 'TOGGLE_TODO':
+      return state.map(todo =>
+        todo.id === action.payload ? { ...todo, completed: !todo.completed } : todo
+      );
+    case 'DELETE_TODO':
+      return state.filter(todo => todo.id !== action.payload);
+    default:
+      return state;
+  }
+};
+
+// メインコンポーネント
 const App: React.FC = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
-  const [title, setTitle] = useState<string>('');
+  // useReducerを使ってTODOリストを管理
+  const [todos, dispatch] = useReducer(todoReducer, []);
 
-  useEffect(() => {
-    axios.get<Todo[]>('http://localhost:8000/todos')
-      .then((response) => {
-        setTodos(response.data);
-      });
-  }, []);
+  // 新しいタスクの入力値を保持する状態
+  const [newTask, setNewTask] = useState<string>(''); 
 
-  const addTodo = () => {
-    const newTodo: Todo = {
-      id: todos.length + 1,
-      title,
-      completed: false,
-    };
-
-    axios.post<Todo>('http://localhost:8000/todos', newTodo)
-      .then((response) => {
-        setTodos([...todos, response.data]);
-        setTitle('');
-      });
-  };
-
-  const updateTodo = (id: number) => {
-    const updatedTodo = todos.find(todo => todo.id === id);
-    if (updatedTodo) {
-      updatedTodo.completed = !updatedTodo.completed;
-      axios.put<Todo>(`http://localhost:8000/todos/${id}`, updatedTodo)
-        .then((response) => {
-          setTodos(todos.map(todo => (todo.id === id ? response.data : todo)));
-        });
+  // フォーム送信時にタスクを追加するハンドラ
+  const handleAddTodo = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (newTask.trim()) {
+      dispatch({ type: 'ADD_TODO', payload: newTask });
+      setNewTask(''); // タスク追加後に入力フィールドをリセット
     }
   };
 
-  const deleteTodo = (id: number) => {
-    axios.delete(`http://localhost:8000/todos/${id}`)
-      .then(() => {
-        setTodos(todos.filter(todo => todo.id !== id));
-      });
+  // タスクの完了状態を切り替えるハンドラ
+  const handleToggleTodo = (id: number) => {
+    dispatch({ type: 'TOGGLE_TODO', payload: id });
   };
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
+  // タスクを削除するハンドラ
+  const handleDeleteTodo = (id: number) => {
+    dispatch({ type: 'DELETE_TODO', payload: id });
   };
 
   return (
     <div>
-      <h1>Todo List</h1>
-      <input
-        type="text"
-        value={title}
-        onChange={handleInputChange}
-      />
-      <button onClick={addTodo}>Add Todo</button>
+      <h1>TODOアプリ</h1>
+      <form onSubmit={handleAddTodo}>
+        <input
+          type="text"
+          value={newTask}
+          onChange={(e) => setNewTask(e.target.value)}
+          placeholder="新しいタスクを入力"
+        />
+        <button type="submit">追加</button>
+      </form>
       <ul>
         {todos.map((todo) => (
           <li key={todo.id}>
-            <span 
+            <span
               style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}
-              onClick={() => updateTodo(todo.id)}
+              onClick={() => handleToggleTodo(todo.id)}
             >
-              {todo.title}
+              {todo.task}
             </span>
-            <button onClick={() => deleteTodo(todo.id)}>Delete</button>
+            <button onClick={() => handleDeleteTodo(todo.id)}>削除</button>
           </li>
         ))}
       </ul>
     </div>
   );
-}
+};
 
 export default App;
