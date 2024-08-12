@@ -1,6 +1,7 @@
 import type { Config } from "jest";
 
 const config: Config = {
+  extensionsToTreatAsEsm:['.ts', '.tsx'], // ESMとして扱う拡張子
   /**
    * presetオプションは、Jestの設定を簡略化するためのテンプレートを提供します。
    * "ts-jest" を指定することで、TypeScriptコードをそのままテストするための設定が適用されます。
@@ -8,28 +9,30 @@ const config: Config = {
    * - 意図: TypeScriptコードをトランスパイルせずに直接テストする。
    * - メリット: 簡単にTypeScriptサポートを導入でき、追加の設定が不要。
    * - デメリット: プリセットに依存するため、カスタマイズが制限される場合があります。
-   */
-  preset: "ts-jest",
+  */
+ // preset: "ts-jest/presets/default-esm",
+ preset: "ts-jest",
+ 
+ /**
+  * testEnvironmentオプションは、テストを実行する際の環境を指定します。
+  * "jsdom" を使用することで、ブラウザライクな環境が提供され、DOM操作が可能になります。
+  * 
+  * - 意図: Reactコンポーネントやブラウザ依存のコードをテストするため。
+  * - メリット: ブラウザのAPIが利用可能になるため、UIのテストに適している。
+  * - デメリット: Node.js固有の環境では動作が異なるため、環境依存のテストは注意が必要。
+ */
+testEnvironment: "jsdom",
 
-  /**
-   * testEnvironmentオプションは、テストを実行する際の環境を指定します。
-   * "jsdom" を使用することで、ブラウザライクな環境が提供され、DOM操作が可能になります。
-   * 
-   * - 意図: Reactコンポーネントやブラウザ依存のコードをテストするため。
-   * - メリット: ブラウザのAPIが利用可能になるため、UIのテストに適している。
-   * - デメリット: Node.js固有の環境では動作が異なるため、環境依存のテストは注意が必要。
-   */
-  testEnvironment: "jsdom",
-
-  /**
-   * setupFilesAfterEnvは、各テストが実行される前にセットアップされるファイルを指定します。
-   * カスタムマッチャーの設定やグローバルなモック、テストフレームワークの初期化に使用されます。
-   * 
-   * - 意図: テスト環境をカスタマイズして統一された初期化処理を実施するため。
-   * - メリット: 重複する初期化コードを削減し、テストの一貫性を保つ。
-   * - デメリット: 複雑な設定やグローバルな副作用が発生しやすく、テストが意図しない方法で影響を受けるリスクがある。
-   */
-  // setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
+/**
+ * setupFilesAfterEnvは、各テストが実行される前にセットアップされるファイルを指定します。
+ * カスタムマッチャーの設定やグローバルなモック、テストフレームワークの初期化に使用されます。
+ * 
+ * - 意図: テスト環境をカスタマイズして統一された初期化処理を実施するため。
+ * - メリット: 重複する初期化コードを削減し、テストの一貫性を保つ。
+ * - デメリット: 複雑な設定やグローバルな副作用が発生しやすく、テストが意図しない方法で影響を受けるリスクがある。
+*/
+setupFilesAfterEnv:["./src/setupTests.ts"],
+// setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
 
   /**
    * moduleNameMapperは、モジュールのパスをカスタムパターンにマッピングするために使用されます。
@@ -61,7 +64,10 @@ const config: Config = {
    * isolatedModules: true を使用することで、TypeScriptファイルのトランスパイルを高速化。
    */
   transform: {
-    "^.+\\.[tj]sx?$": ["ts-jest", { isolatedModules: true }],
+    '^.+\\.(ts|tsx)$': ['ts-jest', {
+      tsconfig: './tsconfig.app.json', // tsconfigファイルを指定
+      isolatedModules: true, // isolatedModulesを追加
+    }],
   },
 
   /**
@@ -95,21 +101,6 @@ const config: Config = {
    */
   maxWorkers: "50%",
 
-  /**
-   * globalsオプションは、テスト実行時に使用するグローバル設定を指定します。
-   * ts-jest の設定をカスタマイズし、TypeScriptのトランスパイルに関連するオプションを提供します。
-   * 
-   * - 意図: ts-jest に対する細かい設定を適用するため。
-   * - 例: isolatedModules: true により、ファイル単位のトランスパイルを有効にしてパフォーマンスを向上させる。
-   * - メリット: テスト実行が高速化され、大規模プロジェクトでのパフォーマンスが向上。
-   * - デメリット: グローバル設定が複雑になると、設定ミスや意図しない動作が発生する可能性がある。
-   */
-  globals: {
-    "ts-jest": {
-      tsconfig: "<rootDir>/tsconfig.json",
-      isolatedModules: true,
-    },
-  },
 
   /**
    * testTimeoutオプションは、各テストが実行される際のタイムアウト時間をミリ秒単位で指定します。

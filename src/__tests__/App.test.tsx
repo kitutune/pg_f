@@ -1,9 +1,6 @@
 // src/__tests__/App.test.tsx
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import App from '../App';
-// 下記を入れると型エラーが消える
-// import '@testing-library/jest-dom';
 
 // テストケース: アプリが正常にレンダリングされるか
 test('renders the TODO app', () => {

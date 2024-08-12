@@ -1,32 +1,32 @@
 {
   "compilerOptions": {
-    // プロジェクトの一部として構築できるようにするオプション
-    "composite": true,
-
-    // TypeScriptのビルド情報を保存するファイルのパスを指定
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-
-    /* 
-      コンパイル対象のJavaScriptのバージョンを指定します。
-      ES2020を指定しており、ES2020以降の構文がサポートされるJavaScriptにトランスパイルされます。
-      ※：typescriptで書いたコードがes2020形式のjsにトランスパイルされる
-      仮にここでesnextを指定していると最新のjsにトランスパイルされる結果ブラウザが未対応の可能性が出てしまう
-
-    */
+    /* Compile Target */
+    /**
+     * targetオプションは、コンパイルされたJavaScriptコードがどのバージョンのECMAScriptをターゲットにするかを指定します。
+     * この設定により、出力されるJavaScriptの互換性が決まります。
+     *
+     * - 意図: プロジェクトが動作するJavaScript環境に最適なコードを生成するため。
+     * - 例: "es5" は広範囲な互換性を持つが、"es2020" は最新の機能を活用できる。
+     * - メリット: プロジェクトのターゲット環境に応じた最適なJavaScriptコードを生成できる。
+     * - デメリット: 低いバージョンを指定すると、最新のJavaScript機能が利用できない。
+     */
     "target": "ES2020",
 
-    /* 
-      クラスフィールドを定義する際、'define'を使用するかどうかを指定します。
-      trueにすると、JavaScriptでクラスフィールドを定義する際により標準的な動作になります。
-    */
-    "useDefineForClassFields": true,
-
-    /* 
-      プロジェクトで利用するライブラリを指定します。
-      ES2020の構文、ブラウザのDOM、そしてDOM.Iterableが含まれます。
-    */
+    /**
+     * libオプションは、コンパイル時に使用する標準ライブラリを指定します。
+     * これにより、利用可能なAPIの範囲が決まります。
+     *
+     * プロジェクトで利用するライブラリを指定します。
+     * ES2020の構文、ブラウザのDOM、そしてDOM.Iterableが含まれます。
+     *
+     * - 意図: プロジェクトで使用するAPIや機能を制限し、動作環境に最適化するため。
+     * - 例: "es2020" は最新のJavaScript機能を含み、"dom" はブラウザのAPIを含む。
+     * - メリット: 必要なAPIのみを取り込むことで、コンパイルエラーを防ぎ、コードを最適化。
+     * - デメリット: 必要なライブラリが不足している場合、実行時エラーが発生する可能性がある。
+     */
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
 
+    /* Modules & Resolution */
     /* 
       使用するモジュールシステムを指定します。
       'ESNext'を指定することで、最新のESモジュールが使用されます。
@@ -34,39 +34,57 @@
     "module": "ESNext",
 
     /* 
-      外部型定義ファイルのチェックをスキップします。
-      これにより、コンパイル時間が短縮されます。
-    */
-    "skipLibCheck": true,
-
-    /* Bundler mode */
-    /* 
       モジュール解決の方法を指定します。
       'bundler'を指定することで、WebpackやViteなどのバンドラー向けのモジュール解決が行われます。
     */
     "moduleResolution": "bundler",
 
     /* 
+      モジュールの検出方法を指定します。
+      'force'を指定すると、すべてのファイルがモジュールとして扱われます。
+    */
+    "moduleDetection": "force",
+
+    /* 
       TypeScriptファイルをインポートするときに拡張子を省略できるようにします。
     */
     "allowImportingTsExtensions": true,
 
+    /* Compatibility */
+    /**
+     * esModuleInteropオプションは、CommonJSモジュールとの互換性を改善します。
+     * デフォルトのエクスポートを含むモジュールのインポートを可能にします。
+     *
+     * - 意図: CommonJSとES Modules間の互換性を確保するため。
+     * - 例: true を設定することで、default importが可能になります。
+     * - メリット: CommonJSモジュールの取り扱いが容易になり、互換性が向上。
+     * - デメリット: このオプションを有効にすると、モジュールのインポートに依存関係が発生する場合があります。
+     */
+    // "esModuleInterop": true,：一旦コメントアウト
+
+    /**
+     * allowSyntheticDefaultImportsは、デフォルトインポートがないモジュールでもデフォルトインポートを許可します。
+     * 特にモジュールの互換性のために重要です。
+     */
+    "allowSyntheticDefaultImports": true,
+
+    /* Features */
     /* 
       JSONファイルのインポートをサポートします。
     */
     "resolveJsonModule": true,
 
     /* 
+      JSX構文のトランスパイル方法を指定します。
+      'react-jsx'を指定すると、React 17+の自動インポート機能が利用されます。
+    */
+    "jsx": "react-jsx",
+
+    /* 
       各ファイルが独立してトランスパイルされるようにします。
       これにより、Babelなどの他のトランスパイラと組み合わせて使用する際に便利です。
     */
     "isolatedModules": true,
-
-    /* 
-      モジュールの検出方法を指定します。
-      'force'を指定すると、すべてのファイルがモジュールとして扱われます。
-    */
-    "moduleDetection": "force",
 
     /* 
       noEmit オプションが true に設定されているため、TypeScriptコンパイラは実際にファイルを出力しません。
@@ -76,10 +94,11 @@
     "noEmit": true,
 
     /* 
-      JSX構文のトランスパイル方法を指定します。
-      'react-jsx'を指定すると、React 17+の自動インポート機能が利用されます。
+      クラスフィールドを定義する際、'define'を使用するかどうかを指定します。
+      trueにすると、JavaScriptでクラスフィールドを定義する際により標準的な動作になります。
+      クラスを使用しないのであれば必要なし
     */
-    "jsx": "react-jsx",
+    "useDefineForClassFields": true,
 
     /* Linting */
     /* 
@@ -103,11 +122,21 @@
     */
     "noFallthroughCasesInSwitch": true,
 
+    /* Types */
     /* 
+    TypeScriptコンパイラが認識する型定義ファイルを指定するために使用
       プロジェクトで使用する型定義パッケージを指定します。
-      ここでは、Jestと@testing-library/jest-domの型定義を追加しています。
+      ここでは、Jestと@testing-library/jest-domの型定義を追加しています。：問題がない間一旦コメントアウトしておく
+      指定しない場合は全ての型定義が読みこまれるのでライブラリが多いと競合する可能性があります
     */
-    "types": ["jest", "@testing-library/jest-dom"]
+    // "types": ["jest", "@testing-library/jest-dom"],
+
+    /* Skip Checks */
+    /* 
+      外部型定義ファイルのチェックをスキップします。
+      これにより、コンパイル時間が短縮されます。
+    */
+    "skipLibCheck": true
   },
   /* 
     コンパイル対象のファイルやディレクトリを指定します。

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState,  useReducer } from 'react';
 
 // 型定義: TODOアイテムの型
 interface Todo {
