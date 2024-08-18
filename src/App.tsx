@@ -10,6 +10,8 @@ interface Todo {
 const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [newTodo, setNewTodo] = useState<string>("");
+  const [editingId, setEditingId] = useState<number | null>(null); // 編集中のTodo ID
+  const [editingTitle, setEditingTitle] = useState<string>(""); // 編集中のタイトル
 
   // すべてのTodoを取得
   useEffect(() => {
@@ -47,10 +49,18 @@ const App: React.FC = () => {
       .put<Todo>(`http://localhost:8000/todos/${todo.id}`, todo)
       .then((response) => {
         setTodos(todos.map((t) => (t.id === todo.id ? response.data : t)));
+        setEditingId(null); // 編集モードを終了
+        setEditingTitle(""); // 編集用のタイトルをクリア
       })
       .catch((error) => {
         console.error("Error updating todo:", error);
       });
+  };
+
+  // 編集モードを開始
+  const startEditing = (todo: Todo) => {
+    setEditingId(todo.id);
+    setEditingTitle(todo.title);
   };
 
   // Todoを削除
@@ -77,15 +87,34 @@ const App: React.FC = () => {
       <ul>
         {todos.map((todo) => (
           <li key={todo.id}>
-            <input
-              type="checkbox"
-              checked={todo.completed}
-              onChange={() =>
-                updateTodo({ ...todo, completed: !todo.completed })
-              }
-            />
-            {todo.title}
-            <button onClick={() => deleteTodo(todo.id)}>Delete</button>
+            {editingId === todo.id ? (
+              <>
+                <input
+                  type="text"
+                  value={editingTitle}
+                  onChange={(e) => setEditingTitle(e.target.value)}
+                />
+                <button
+                  onClick={() => updateTodo({ ...todo, title: editingTitle })}
+                >
+                  Save
+                </button>
+                <button onClick={() => setEditingId(null)}>Cancel</button>
+              </>
+            ) : (
+              <>
+                <input
+                  type="checkbox"
+                  checked={todo.completed}
+                  onChange={() =>
+                    updateTodo({ ...todo, completed: !todo.completed })
+                  }
+                />
+                {todo.title}
+                <button onClick={() => startEditing(todo)}>Edit</button>
+                <button onClick={() => deleteTodo(todo.id)}>Delete</button>
+              </>
+            )}
           </li>
         ))}
       </ul>
