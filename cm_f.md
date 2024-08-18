@@ -158,3 +158,35 @@
  1112  npm ls jest-environment-jsdom
  1113  npm install --save-dev jest-environment-jsdom
  1114  history
+  997  jest --clearCache
+  998  jest --clearCache
+  999  lsblk -f\n
+ 1000  blkid\n
+ 1001  npm outdated\n
+ 1002  npm i
+ 1003  ncu\n
+ 1004  ncu -u\n
+ 1005  tree -L2 -I "node_modules"
+ 1006  npm install --save-dev prettier\n
+ 1007  npm ls eslint
+ 1008  npm ls @types/eslint
+ 1009  npm info @types/eslint
+ 1010  npm install --save-dev @types/eslint\n
+ 1011  npm ls eslint-plugin-prettier
+ 1012  npm info eslint-plugin-prettier
+ 1035  which npm
+ 1036  npm install -g npm@10.8.2
+ 1037  npm ls eslint
+ 1038  npm info eslint
+ 1039  npm i
+ 1040  npm ls eslint
+ 1041  ncu
+ 1042  ncu -u
+ 1043  npm ls eslint
+ 1044  npm i
+ 1045  npm i
+ 1046  npm ls eslint
+ 1047  ncu
+ 1048  npm info eslint-config-prettier
+ 1049  npm init @eslint/config@latest
+ 1050  npm info eslint-config-prettier

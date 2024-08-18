@@ -1,4 +1,4 @@
-import React, { useState,  useReducer } from 'react';
+import React, { useState, useReducer } from "react";
 
 // 型定義: TODOアイテムの型
 interface Todo {
@@ -9,24 +9,26 @@ interface Todo {
 
 // 型定義: Reducerのアクションの型
 type Action =
-  | { type: 'ADD_TODO'; payload: string } // タスク追加のアクション
-  | { type: 'TOGGLE_TODO'; payload: number } // タスク完了状態を切り替えるアクション
-  | { type: 'DELETE_TODO'; payload: number }; // タスク削除のアクション
+  | { type: "ADD_TODO"; payload: string } // タスク追加のアクション
+  | { type: "TOGGLE_TODO"; payload: number } // タスク完了状態を切り替えるアクション
+  | { type: "DELETE_TODO"; payload: number }; // タスク削除のアクション
 
 // Reducer関数: 状態とアクションに基づいて新しい状態を返す
 const todoReducer = (state: Todo[], action: Action): Todo[] => {
   switch (action.type) {
-    case 'ADD_TODO':
+    case "ADD_TODO":
       return [
         ...state,
         { id: Date.now(), task: action.payload, completed: false },
       ];
-    case 'TOGGLE_TODO':
-      return state.map(todo =>
-        todo.id === action.payload ? { ...todo, completed: !todo.completed } : todo
+    case "TOGGLE_TODO":
+      return state.map((todo) =>
+        todo.id === action.payload
+          ? { ...todo, completed: !todo.completed }
+          : todo
       );
-    case 'DELETE_TODO':
-      return state.filter(todo => todo.id !== action.payload);
+    case "DELETE_TODO":
+      return state.filter((todo) => todo.id !== action.payload);
     default:
       return state;
   }
@@ -38,26 +40,28 @@ const App: React.FC = () => {
   const [todos, dispatch] = useReducer(todoReducer, []);
 
   // 新しいタスクの入力値を保持する状態
-  const [newTask, setNewTask] = useState<string>(''); 
+  const [newTask, setNewTask] = useState<string>("");
 
   // フォーム送信時にタスクを追加するハンドラ
   const handleAddTodo = (event: React.FormEvent) => {
     event.preventDefault();
     if (newTask.trim()) {
-      dispatch({ type: 'ADD_TODO', payload: newTask });
-      setNewTask(''); // タスク追加後に入力フィールドをリセット
+      dispatch({ type: "ADD_TODO", payload: newTask });
+      setNewTask(""); // タスク追加後に入力フィールドをリセット
     }
   };
 
   // タスクの完了状態を切り替えるハンドラ
   const handleToggleTodo = (id: number) => {
-    dispatch({ type: 'TOGGLE_TODO', payload: id });
+    dispatch({ type: "TOGGLE_TODO", payload: id });
   };
 
   // タスクを削除するハンドラ
   const handleDeleteTodo = (id: number) => {
-    dispatch({ type: 'DELETE_TODO', payload: id });
+    dispatch({ type: "DELETE_TODO", payload: id });
   };
+  // エラー出ている
+  console.log("aa");
 
   return (
     <div>
@@ -75,7 +79,9 @@ const App: React.FC = () => {
         {todos.map((todo) => (
           <li key={todo.id}>
             <span
-              style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}
+              style={{
+                textDecoration: todo.completed ? "line-through" : "none",
+              }}
               onClick={() => handleToggleTodo(todo.id)}
             >
               {todo.task}
