@@ -1,0 +1,10 @@
+{
+  // ESLint の設定でフラット構成を使用します
+  "eslint.useFlatConfig": true,
+
+  // ファイルを保存する際に自動でフォーマットを適用します
+  "editor.formatOnSave": true,
+
+  // デフォルトのフォーマッタとして Prettier を設定します
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+}
