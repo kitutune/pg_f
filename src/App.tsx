@@ -1,92 +1,91 @@
-import React, { useState, useReducer } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-// 型定義: TODOアイテムの型
 interface Todo {
-  id: number; // ユニークなID
-  task: string; // タスクの内容
-  completed: boolean; // タスクが完了したかどうか
+  id: number;
+  title: string;
+  completed: boolean;
 }
 
-// 型定義: Reducerのアクションの型
-type Action =
-  | { type: "ADD_TODO"; payload: string } // タスク追加のアクション
-  | { type: "TOGGLE_TODO"; payload: number } // タスク完了状態を切り替えるアクション
-  | { type: "DELETE_TODO"; payload: number }; // タスク削除のアクション
-
-// Reducer関数: 状態とアクションに基づいて新しい状態を返す
-const todoReducer = (state: Todo[], action: Action): Todo[] => {
-  switch (action.type) {
-    case "ADD_TODO":
-      return [
-        ...state,
-        { id: Date.now(), task: action.payload, completed: false },
-      ];
-    case "TOGGLE_TODO":
-      return state.map((todo) =>
-        todo.id === action.payload
-          ? { ...todo, completed: !todo.completed }
-          : todo
-      );
-    case "DELETE_TODO":
-      return state.filter((todo) => todo.id !== action.payload);
-    default:
-      return state;
-  }
-};
-
-// メインコンポーネント
 const App: React.FC = () => {
-  // useReducerを使ってTODOリストを管理
-  const [todos, dispatch] = useReducer(todoReducer, []);
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [newTodo, setNewTodo] = useState<string>("");
 
-  // 新しいタスクの入力値を保持する状態
-  const [newTask, setNewTask] = useState<string>("");
+  // すべてのTodoを取得
+  useEffect(() => {
+    axios
+      .get<Todo[]>("http://localhost:8000/todos")
+      .then((response) => {
+        setTodos(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching todos:", error);
+      });
+  }, []);
 
-  // フォーム送信時にタスクを追加するハンドラ
-  const handleAddTodo = (event: React.FormEvent) => {
-    event.preventDefault();
-    if (newTask.trim()) {
-      dispatch({ type: "ADD_TODO", payload: newTask });
-      setNewTask(""); // タスク追加後に入力フィールドをリセット
-    }
+  // 新しいTodoを追加
+  const addTodo = () => {
+    const newTodoItem = {
+      title: newTodo,
+      completed: false,
+    };
+
+    axios
+      .post<Todo>("http://localhost:8000/todos", newTodoItem)
+      .then((response) => {
+        setTodos([...todos, response.data]);
+        setNewTodo("");
+      })
+      .catch((error) => {
+        console.error("Error creating todo:", error);
+      });
   };
 
-  // タスクの完了状態を切り替えるハンドラ
-  const handleToggleTodo = (id: number) => {
-    dispatch({ type: "TOGGLE_TODO", payload: id });
+  // Todoを更新
+  const updateTodo = (todo: Todo) => {
+    axios
+      .put<Todo>(`http://localhost:8000/todos/${todo.id}`, todo)
+      .then((response) => {
+        setTodos(todos.map((t) => (t.id === todo.id ? response.data : t)));
+      })
+      .catch((error) => {
+        console.error("Error updating todo:", error);
+      });
   };
 
-  // タスクを削除するハンドラ
-  const handleDeleteTodo = (id: number) => {
-    dispatch({ type: "DELETE_TODO", payload: id });
+  // Todoを削除
+  const deleteTodo = (id: number) => {
+    axios
+      .delete(`http://localhost:8000/todos/${id}`)
+      .then(() => {
+        setTodos(todos.filter((t) => t.id !== id));
+      })
+      .catch((error) => {
+        console.error("Error deleting todo:", error);
+      });
   };
-  // エラー出ている
-  console.log("aa");
 
   return (
     <div>
-      <h1>TODOアプリ</h1>
-      <form onSubmit={handleAddTodo}>
-        <input
-          type="text"
-          value={newTask}
-          onChange={(e) => setNewTask(e.target.value)}
-          placeholder="新しいタスクを入力"
-        />
-        <button type="submit">追加</button>
-      </form>
+      <h1>Todo List</h1>
+      <input
+        value={newTodo}
+        onChange={(e) => setNewTodo(e.target.value)}
+        placeholder="New todo"
+      />
+      <button onClick={addTodo}>Add Todo</button>
       <ul>
         {todos.map((todo) => (
           <li key={todo.id}>
-            <span
-              style={{
-                textDecoration: todo.completed ? "line-through" : "none",
-              }}
-              onClick={() => handleToggleTodo(todo.id)}
-            >
-              {todo.task}
-            </span>
-            <button onClick={() => handleDeleteTodo(todo.id)}>削除</button>
+            <input
+              type="checkbox"
+              checked={todo.completed}
+              onChange={() =>
+                updateTodo({ ...todo, completed: !todo.completed })
+              }
+            />
+            {todo.title}
+            <button onClick={() => deleteTodo(todo.id)}>Delete</button>
           </li>
         ))}
       </ul>
