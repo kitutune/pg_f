@@ -107,21 +107,6 @@
     */
     "strict": true,
 
-    /* 
-      使用されていないローカル変数の警告を有効にします。
-    */
-    "noUnusedLocals": true,
-
-    /* 
-      使用されていない関数のパラメータの警告を有効にします。
-    */
-    "noUnusedParameters": true,
-
-    /* 
-      switch文でフォールスルーケースを防ぐための警告を有効にします。
-    */
-    "noFallthroughCasesInSwitch": true,
-
     /* Types */
     /* 
     TypeScriptコンパイラが認識する型定義ファイルを指定するために使用
