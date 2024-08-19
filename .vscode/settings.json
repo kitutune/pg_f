@@ -5,6 +5,13 @@
   // ファイルを保存する際に自動でフォーマットを適用します
   "editor.formatOnSave": true,
 
+  "editor.codeActionsOnSave": {
+    //  importのソートと使用していないimportの削除
+    "source.organizeImports": "explicit",
+    //　eslintのルールで保存
+    "source.fixAll.eslint": "explicit"
+  },
+
   // デフォルトのフォーマッタとして Prettier を設定します
   "editor.defaultFormatter": "esbenp.prettier-vscode"
 }
